@@ -36,7 +36,8 @@ module Songster
     private
 
     def create_debug_points_canvas
-      Commander.new("convert #{@dir}/original.miff images/debug_points.png").run!
+      Commander.new("convert #{@dir}/original.miff",
+                    Songster.debug_folder.join("debug_points.png").to_s).run!
     end
 
     def create_debug_points(mouth)
@@ -47,7 +48,7 @@ module Songster
                     "    circle #{mouth.center_x},#{mouth.center_y} #{mouth.center_x},#{mouth.center_y-2}",
                     "    circle #{mouth.right_x},#{mouth.right_y} #{mouth.right_x},#{mouth.right_y-2}",
                     "'",
-                    "images/debug_points.png").run!
+                    Songster.debug_folder.join("debug_points.png") ).run!
     end
 
     def convert_original_to_miff
@@ -141,7 +142,7 @@ module Songster
 
       animate = Commander.new("convert -loop 0 -delay 30")
       animate << "#{@dir}/original.miff #{@dir}/opened_mouths.miff"
-      animate << "images/#{fname}-singing.gif"
+      animate << Songster.output_folder.join("#{fname}-singing.gif").to_s
       animate.run!
     end
 
