@@ -116,7 +116,7 @@ module Songster
                      # Crop to get the results.
                      "-crop #{crop_size}#{crop_location}",
 
-                     "#{@dir}/bottom.miff").run!
+                     "#{@dir}/bottom.miff")
     end
 
     # Merge the top and bottom part of the mouth to create the opened mouth.
