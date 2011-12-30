@@ -1,0 +1,8 @@
+@todo Support multiple faces in one image
+@todo Support non vertical faces
+@todo Support destination image options
+@todo Create a gem out of this.
+@todo Create a README.md file
+@todo Test yard
+@todo Test with more faces/shapes
+@todo Look into gif optimization with ImageMagick
