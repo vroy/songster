@@ -16,6 +16,10 @@ module Songster
       return self.join(" ")
     end
 
+    def self.run!(*args)
+      self.new(*args).run!
+    end
+
     # Run the system call string
     def run!
       cmd = self.to_s
