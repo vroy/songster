@@ -7,30 +7,33 @@ module Songster
     end
 
     def generate!
-      face = Songster::Face.new(@image_path).detect!
+      faces = Songster::Image.new(@image_path).detect!
 
       @dir = Dir.mktmpdir("songster")
 
       puts "Putting temporary files in #{@dir}".green if Songster.debug
 
-      convert_original_to_gif
+      convert_original_to_miff
+      create_opened_mouths_canvas
 
-      create_mouth_top_crop(face.mouth)
-      create_mouth_bottom_crop(face.mouth)
-      merge_top_and_bottom_of_mouth
+      faces.each do |face|
+        create_mouth_top_crop(face.mouth)
+        create_mouth_bottom_crop(face.mouth)
+        merge_top_and_bottom_of_mouth
 
-      merge_opened_mouth_and_original(face.mouth)
+        merge_opened_mouth_on_canvas(face.mouth)
+      end
 
       animate_into_gif
 
-      # @todo Cleanup the tmp directory
+      Pathname.new(@dir).rmtree
     end # generate!
 
     private
 
-    def convert_original_to_gif
+    def convert_original_to_miff
       Commander.new("convert", @image_path,
-                    "-format miff #{@dir}/giffed.miff").run!
+                    "-format miff #{@dir}/original.miff").run!
     end
 
     # Create a crop of the mouth upper lip with black padding on the bottom
@@ -38,7 +41,7 @@ module Songster
       crop_size = "#{mouth.width}x#{mouth.height}"
       crop_location = "+#{mouth.left_x}+#{mouth.top}"
 
-      Commander.new("convert #{@dir}/giffed.miff",
+      Commander.new("convert #{@dir}/original.miff",
 
                     # Fill the section below the mouth's left side in black.
                     "-fill black -stroke black -draw \"polygon",
@@ -64,7 +67,7 @@ module Songster
       crop_size = "#{mouth.width}x#{mouth.chin_height+mouth.opening_size}"
       crop_location = "+#{mouth.left_x}+#{mouth.middle}"
 
-      Commander.new("convert #{@dir}/giffed.miff",
+      Commander.new("convert #{@dir}/original.miff",
 
                     "-fill black -stroke black",
                     "-draw \"path '",
@@ -90,11 +93,15 @@ module Songster
                     "-append #{@dir}/opened_mouth.miff").run!
     end
 
+    def create_opened_mouths_canvas
+      Commander.new("convert #{@dir}/original.miff #{@dir}/opened_mouths.miff").run!
+    end
+
     # Put the opened mouth over the original image.
-    def merge_opened_mouth_and_original(mouth)
-      Commander.new("composite #{@dir}/opened_mouth.miff #{@dir}/giffed.miff",
+    def merge_opened_mouth_on_canvas(mouth)
+      Commander.new("composite #{@dir}/opened_mouth.miff #{@dir}/opened_mouths.miff",
                     "-gravity northwest -geometry +#{mouth.x}+#{mouth.y}",
-                    "#{@dir}/offset_mouth.miff").run!
+                    "#{@dir}/opened_mouths.miff").run!
     end
 
     # Build a gif of the original image and the image with opened mouths
@@ -102,7 +109,7 @@ module Songster
       fname = Pathname.new(@image_path).basename.sub_ext("")
 
       animate = Commander.new("convert -loop 0 -delay 30")
-      animate << "#{@dir}/giffed.miff #{@dir}/offset_mouth.miff"
+      animate << "#{@dir}/original.miff #{@dir}/opened_mouths.miff"
       animate << "images/#{fname}-singing.gif"
       animate.run!
     end

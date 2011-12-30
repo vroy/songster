@@ -11,6 +11,7 @@ require_relative "songster/commander"
 require_relative "songster/face"
 require_relative "songster/mouth"
 require_relative "songster/generator"
+require_relative "songster/image"
 
 module Songster
 
