@@ -36,24 +36,24 @@ module Songster
     private
 
     def create_debug_points_canvas
-      Commander.new("convert #{@dir}/original.miff",
-                    Songster.debug_folder.join("debug_points.png").to_s).run!
+      Commander.run!("convert #{@dir}/original.miff",
+                     Songster.debug_folder.join("debug_points.png").to_s)
     end
 
     def create_debug_points(mouth)
-      Commander.new("mogrify",
-                    "-stroke green -fill green",
-                    "-draw '",
-                    "    circle #{mouth.left_x},#{mouth.left_y} #{mouth.left_x},#{mouth.left_y-2}",
-                    "    circle #{mouth.center_x},#{mouth.center_y} #{mouth.center_x},#{mouth.center_y-2}",
-                    "    circle #{mouth.right_x},#{mouth.right_y} #{mouth.right_x},#{mouth.right_y-2}",
-                    "'",
-                    Songster.debug_folder.join("debug_points.png") ).run!
+      Commander.run!("mogrify",
+                     "-stroke green -fill green",
+                     "-draw '",
+                     "    circle #{mouth.left_x},#{mouth.left_y} #{mouth.left_x},#{mouth.left_y-2}",
+                     "    circle #{mouth.center_x},#{mouth.center_y} #{mouth.center_x},#{mouth.center_y-2}",
+                     "    circle #{mouth.right_x},#{mouth.right_y} #{mouth.right_x},#{mouth.right_y-2}",
+                     "'",
+                     Songster.debug_folder.join("debug_points.png") )
     end
 
     def convert_original_to_miff
-      Commander.new("convert", @image_path,
-                    "-format miff #{@dir}/original.miff").run!
+      Commander.run!("convert", @image_path,
+                     "-format miff #{@dir}/original.miff")
     end
 
     # Create a crop of the mouth upper lip with black padding on the bottom
@@ -61,31 +61,31 @@ module Songster
       crop_size = "#{mouth.width}x#{mouth.height+5}"
       crop_location = "+#{mouth.left_x}+#{mouth.top}"
 
-      Commander.new("convert #{@dir}/original.miff",
-                    "-fill black -stroke black",
+      Commander.run!("convert #{@dir}/original.miff",
+                     "-fill black -stroke black",
 
-                    "-draw \"path '",
-                    # Start line at the top left point
-                    "    M #{mouth.left_x},#{mouth.left_y}",
+                     "-draw \"path '",
+                     # Start line at the top left point
+                     "    M #{mouth.left_x},#{mouth.left_y}",
 
-                    # Draw a curve to the right point.
-                    "    C #{mouth.center_x},#{mouth.center_y+5}",
-                    "      #{mouth.center_x},#{mouth.center_y+5}",
-                    "      #{mouth.right_x},#{mouth.right_y}",
+                     # Draw a curve to the right point.
+                     "    C #{mouth.center_x},#{mouth.center_y+5}",
+                     "      #{mouth.center_x},#{mouth.center_y+5}",
+                     "      #{mouth.right_x},#{mouth.right_y}",
 
-                    # Draw a straight line to a point below the right point.
-                    "    L #{mouth.right_x},#{mouth.bottom+5}",
+                     # Draw a straight line to a point below the right point.
+                     "    L #{mouth.right_x},#{mouth.bottom+5}",
 
-                    # Draw a straight line to a point below the left point.
-                    "    L #{mouth.left_x},#{mouth.bottom+5}",
+                     # Draw a straight line to a point below the left point.
+                     "    L #{mouth.left_x},#{mouth.bottom+5}",
 
-                    # Close the figure so it can be filled.
-                    "    Z",
-                    "'\"",
+                     # Close the figure so it can be filled.
+                     "    Z",
+                     "'\"",
 
-                    "-crop #{crop_size}#{crop_location}",
+                     "-crop #{crop_size}#{crop_location}",
 
-                    "#{@dir}/top.miff").run!
+                     "#{@dir}/top.miff")
     end
 
     # Create a crop of the mouth bottom lip with black padding on the top
@@ -93,47 +93,48 @@ module Songster
       crop_size = "#{mouth.width}x#{mouth.chin_height+mouth.opening_size}"
       crop_location = "+#{mouth.left_x}+#{mouth.middle}"
 
-      Commander.new("convert #{@dir}/original.miff",
-                    "-fill black -stroke black",
+      Commander.run!("convert #{@dir}/original.miff",
+                     "-fill black -stroke black",
 
-                    "-draw \"path '",
+                     "-draw \"path '",
 
-                    # Start line at the top left point
-                    "    M #{mouth.left_x},#{mouth.left_y}",
+                     # Start line at the top left point
+                     "    M #{mouth.left_x},#{mouth.left_y}",
 
-                    # Draw a curve to the right point
-                    "    C #{mouth.center_x},#{mouth.center_y+5}",
-                    "      #{mouth.center_x},#{mouth.center_y+5}",
+                     # Draw a curve to the right point
+                     "    C #{mouth.center_x},#{mouth.center_y+5}",
+                     "      #{mouth.center_x},#{mouth.center_y+5}",
 
-                    # Finish line at the right point.
-                    "      #{mouth.right_x},#{mouth.right_y}'",
-                    "\"",
+                     # Finish line at the right point.
+                     "      #{mouth.right_x},#{mouth.right_y}'",
+                     "\"",
 
-                    # Add black padding to adjust how big the mouth opens.
-                    "-gravity northwest -background black",
-                    "-splice 0x#{mouth.opening_size}+0+#{mouth.middle}",
+                     # Add black padding to adjust how big the mouth opens.
+                     "-gravity northwest -background black",
+                     "-splice 0x#{mouth.opening_size}+0+#{mouth.middle}",
 
-                    # Crop to get the results.
-                    "-crop #{crop_size}#{crop_location}",
+                     # Crop to get the results.
+                     "-crop #{crop_size}#{crop_location}",
 
-                    "#{@dir}/bottom.miff").run!
+                     "#{@dir}/bottom.miff").run!
     end
 
     # Merge the top and bottom part of the mouth to create the opened mouth.
     def merge_top_and_bottom_of_mouth
-      Commander.new("convert #{@dir}/top.miff #{@dir}/bottom.miff",
-                    "-append #{@dir}/opened_mouth.miff").run!
+      Commander.run!("convert #{@dir}/top.miff #{@dir}/bottom.miff",
+                     "-append #{@dir}/opened_mouth.miff")
     end
 
     def create_opened_mouths_canvas
-      Commander.new("convert #{@dir}/original.miff #{@dir}/opened_mouths.miff").run!
+      Commander.run!("convert #{@dir}/original.miff #{@dir}/opened_mouths.miff")
     end
 
     # Put the opened mouth over the original image.
     def merge_opened_mouth_on_canvas(mouth)
-      Commander.new("composite #{@dir}/opened_mouth.miff #{@dir}/opened_mouths.miff",
-                    "-gravity northwest -geometry +#{mouth.x}+#{mouth.y}",
-                    "#{@dir}/opened_mouths.miff").run!
+      Commander.run!("composite",
+                     "#{@dir}/opened_mouth.miff #{@dir}/opened_mouths.miff",
+                     "-gravity northwest -geometry +#{mouth.x}+#{mouth.y}",
+                     "#{@dir}/opened_mouths.miff")
     end
 
     # Build a gif of the original image and the image with opened mouths
