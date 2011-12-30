@@ -5,3 +5,4 @@
 @todo Test yard
 @todo Test with more faces/shapes
 @todo Look into gif optimization with ImageMagick
+@todo Remove all hard coded values from the calculations

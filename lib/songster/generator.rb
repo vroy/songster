@@ -38,24 +38,30 @@ module Songster
 
     # Create a crop of the mouth upper lip with black padding on the bottom
     def create_mouth_top_crop(mouth)
-      crop_size = "#{mouth.width}x#{mouth.height}"
+      crop_size = "#{mouth.width}x#{mouth.height+5}"
       crop_location = "+#{mouth.left_x}+#{mouth.top}"
 
       Commander.new("convert #{@dir}/original.miff",
+                    "-fill black -stroke black",
 
-                    # Fill the section below the mouth's left side in black.
-                    "-fill black -stroke black -draw \"polygon",
-                    "  #{mouth.left_x},#{mouth.left_y}",
-                    "  #{mouth.center_x},#{mouth.center_y}",
-                    "  #{mouth.left_x},#{mouth.bottom}",
-                    "\"",
+                    "-draw \"path '",
+                    # Start line at the top left point
+                    "    M #{mouth.left_x},#{mouth.left_y}",
 
-                    # Fill the section below the mouth's right side in black.
-                    "-fill black -stroke black -draw \"polygon",
-                    "  #{mouth.right_x},#{mouth.right_y}",
-                    "  #{mouth.center_x},#{mouth.center_y}",
-                    "  #{mouth.right_x},#{mouth.bottom}",
-                    "\"",
+                    # Draw a curve to the right point.
+                    "    C #{mouth.center_x},#{mouth.center_y+5}",
+                    "      #{mouth.center_x},#{mouth.center_y+5}",
+                    "      #{mouth.right_x},#{mouth.right_y}",
+
+                    # Draw a straight line to a point below the right point.
+                    "    L #{mouth.right_x},#{mouth.bottom+5}",
+
+                    # Draw a straight line to a point below the left point.
+                    "    L #{mouth.left_x},#{mouth.bottom+5}",
+
+                    # Close the figure so it can be filled.
+                    "    Z",
+                    "'\"",
 
                     "-crop #{crop_size}#{crop_location}",
 
@@ -68,12 +74,18 @@ module Songster
       crop_location = "+#{mouth.left_x}+#{mouth.middle}"
 
       Commander.new("convert #{@dir}/original.miff",
-
                     "-fill black -stroke black",
+
                     "-draw \"path '",
+
+                    # Start line at the top left point
                     "    M #{mouth.left_x},#{mouth.left_y}",
+
+                    # Draw a curve to the right point
                     "    C #{mouth.center_x},#{mouth.center_y+5}",
                     "      #{mouth.center_x},#{mouth.center_y+5}",
+
+                    # Finish line at the right point.
                     "      #{mouth.right_x},#{mouth.right_y}'",
                     "\"",
 
