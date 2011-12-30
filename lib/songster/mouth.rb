@@ -4,6 +4,7 @@ module Songster
   class Mouth
 
     attr_reader :left_x, :left_y, :center_x, :center_y, :right_x, :right_y
+    attr_reader :left, :center, :right
     attr_reader :x, :y, :width, :height, :top, :middle, :bottom
     attr_reader :opening_size, :chin_height
 
@@ -22,12 +23,15 @@ module Songster
       # Calculate the real location of the mouth points in the picture.
       @left_x = (tags["mouth_left"]["x"] * photo_width_percentage).to_i
       @left_y = (tags["mouth_left"]["y"] * photo_height_percentage).to_i
+      @left = "#{@left_x},#{@left_y}"
 
       @center_x = (tags["mouth_center"]["x"] * photo_width_percentage).to_i
       @center_y = (tags["mouth_center"]["y"] * photo_height_percentage).to_i
+      @center = "#{@center_x},#{@center_y}"
 
       @right_x = (tags["mouth_right"]["x"] * photo_width_percentage).to_i
       @right_y = (tags["mouth_right"]["y"] * photo_height_percentage).to_i
+      @right = "#{@right_x},#{@right_y}"
 
       # @todo Currently the left point but could be reviewed to be the highest
       #       vertical point and the most left point.

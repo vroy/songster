@@ -44,9 +44,9 @@ module Songster
       Commander.run!("mogrify",
                      "-stroke green -fill green",
                      "-draw '",
-                     "    circle #{mouth.left_x},#{mouth.left_y} #{mouth.left_x},#{mouth.left_y-2}",
-                     "    circle #{mouth.center_x},#{mouth.center_y} #{mouth.center_x},#{mouth.center_y-2}",
-                     "    circle #{mouth.right_x},#{mouth.right_y} #{mouth.right_x},#{mouth.right_y-2}",
+                     "    circle #{mouth.left} #{mouth.left_x},#{mouth.left_y-2}",
+                     "    circle #{mouth.center} #{mouth.center_x},#{mouth.center_y-2}",
+                     "    circle #{mouth.right} #{mouth.right_x},#{mouth.right_y-2}",
                      "'",
                      Songster.debug_folder.join("debug_points.png") )
     end
@@ -66,12 +66,12 @@ module Songster
 
                      "-draw \"path '",
                      # Start line at the top left point
-                     "    M #{mouth.left_x},#{mouth.left_y}",
+                     "    M #{mouth.left}",
 
                      # Draw a curve to the right point.
                      "    C #{mouth.center_x},#{mouth.center_y+5}",
                      "      #{mouth.center_x},#{mouth.center_y+5}",
-                     "      #{mouth.right_x},#{mouth.right_y}",
+                     "      #{mouth.right}",
 
                      # Draw a straight line to a point below the right point.
                      "    L #{mouth.right_x},#{mouth.bottom+5}",
@@ -99,14 +99,14 @@ module Songster
                      "-draw \"path '",
 
                      # Start line at the top left point
-                     "    M #{mouth.left_x},#{mouth.left_y}",
+                     "    M #{mouth.left}",
 
                      # Draw a curve to the right point
                      "    C #{mouth.center_x},#{mouth.center_y+5}",
                      "      #{mouth.center_x},#{mouth.center_y+5}",
 
                      # Finish line at the right point.
-                     "      #{mouth.right_x},#{mouth.right_y}'",
+                     "      #{mouth.right}'",
                      "\"",
 
                      # Add black padding to adjust how big the mouth opens.
