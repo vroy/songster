@@ -16,12 +16,16 @@ module Songster
       convert_original_to_miff
       create_opened_mouths_canvas
 
+      create_debug_points_canvas if Songster.debug
+
       faces.each do |face|
         create_mouth_top_crop(face.mouth)
         create_mouth_bottom_crop(face.mouth)
         merge_top_and_bottom_of_mouth
 
         merge_opened_mouth_on_canvas(face.mouth)
+
+        create_debug_points(face.mouth) if Songster.debug
       end
 
       animate_into_gif
@@ -30,6 +34,21 @@ module Songster
     end # generate!
 
     private
+
+    def create_debug_points_canvas
+      Commander.new("convert #{@dir}/original.miff images/debug_points.png").run!
+    end
+
+    def create_debug_points(mouth)
+      Commander.new("mogrify",
+                    "-stroke green -fill green",
+                    "-draw '",
+                    "    circle #{mouth.left_x},#{mouth.left_y} #{mouth.left_x},#{mouth.left_y-2}",
+                    "    circle #{mouth.center_x},#{mouth.center_y} #{mouth.center_x},#{mouth.center_y-2}",
+                    "    circle #{mouth.right_x},#{mouth.right_y} #{mouth.right_x},#{mouth.right_y-2}",
+                    "'",
+                    "images/debug_points.png").run!
+    end
 
     def convert_original_to_miff
       Commander.new("convert", @image_path,
