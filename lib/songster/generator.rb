@@ -49,7 +49,7 @@ module Songster
       # Resize the singing image to 40% of the size.
       Commander.run!("convert",
                      Songster.output_folder.join("#{@fname}-singing.gif").to_s,
-                     "-resize 50%",
+                     "-resize 40%",
                      "#{@dir}/singing_smaller.miff")
 
       # Put two closed mouth side by side.
