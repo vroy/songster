@@ -11,6 +11,14 @@ To use it at the moment, you can have a look at the test.rb file. To run it on
 the test images I provided, you can run `ruby test.rb images/me.jpg` or
 `ruby test.rb images/me-double.jpg`
 
+# Examples
+
+### Single face example
+![Two Face Singing Example](https://github.com/exploid/songster/raw/master/images/me-sidebyside.gif)
+
+### Two face example
+![Two Face Singing Example](https://github.com/exploid/songster/raw/master/images/me-double-sidebyside.gif)
+
 # Dependencies
 
 ### face.com
