@@ -1,0 +1,6 @@
+# This is just an example of what the face.json file should look like.
+# You need to acquire your own face.com API key on http://developers.face.com/
+{
+	"api_key": "API_KEY_GOES_HERE",
+	"api_secret": "API_SECRET_GOES_HERE"
+}
