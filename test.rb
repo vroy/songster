@@ -10,4 +10,4 @@ Songster.debug = true
 Songster.debug_folder = Pathname.new("images").expand_path
 Songster.output_folder = Pathname.new("images").expand_path
 
-Songster.generate!("images/me.jpg")
+Songster.generate!(ARGV.first)
