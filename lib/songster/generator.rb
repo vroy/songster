@@ -10,6 +10,7 @@ module Songster
       faces = Songster::Image.new(@image_path).detect!
 
       @dir = Dir.mktmpdir("songster")
+      @fname = Pathname.new(@image_path).basename.sub_ext("")
 
       puts "Putting temporary files in #{@dir}".green if Songster.debug
 
@@ -30,10 +31,43 @@ module Songster
 
       animate_into_gif
 
+      create_side_by_side_example if Songster.debug
+
       Pathname.new(@dir).rmtree
     end # generate!
 
     private
+
+    # Resize the original and singing images to 40% of their size
+    # and put them side by side.
+    def create_side_by_side_example
+      # Resize the original image to 40% of the size.
+      Commander.run!("convert #{@dir}/original.miff",
+                     "-resize 40%",
+                     "#{@dir}/original_smaller.miff")
+
+      # Resize the singing image to 40% of the size.
+      Commander.run!("convert",
+                     Songster.output_folder.join("#{@fname}-singing.gif").to_s,
+                     "-resize 50%",
+                     "#{@dir}/singing_smaller.miff")
+
+      # Put two closed mouth side by side.
+      Commander.run!("convert",
+                     "#{@dir}/original_smaller.miff #{@dir}/original_smaller.miff",
+                     "+append",
+                     "#{@dir}/sidebyside_closed.miff")
+
+      # Put a closed and opened mouth side by side.
+      Commander.run!("convert",
+                     "#{@dir}/singing_smaller.miff",
+                     "+append",
+                     "#{@dir}/sidebyside_opened.miff")
+
+      Commander.run!("convert -loop 0 -delay 30",
+                     "#{@dir}/sidebyside_closed.miff #{@dir}/sidebyside_opened.miff",
+                     Songster.debug_folder.join("#{@fname}-sidebyside.gif").to_s)
+    end
 
     def create_debug_points_canvas
       Commander.run!("convert #{@dir}/original.miff",
@@ -139,11 +173,9 @@ module Songster
 
     # Build a gif of the original image and the image with opened mouths
     def animate_into_gif
-      fname = Pathname.new(@image_path).basename.sub_ext("")
-
       animate = Commander.new("convert -loop 0 -delay 30")
       animate << "#{@dir}/original.miff #{@dir}/opened_mouths.miff"
-      animate << Songster.output_folder.join("#{fname}-singing.gif").to_s
+      animate << Songster.output_folder.join("#{@fname}-singing.gif").to_s
       animate.run!
     end
 
