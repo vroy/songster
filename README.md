@@ -1,6 +1,6 @@
 # Songster
 
-Turn every face in your images into singing faces. ALPHA
+Turn every face found in your images into singing faces. -- ALPHA --
 
 # Usage
 
