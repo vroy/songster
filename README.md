@@ -14,9 +14,11 @@ the test images I provided, you can run `ruby test.rb images/me.jpg` or
 ## Examples
 
 ### Single face example
+
 ![Two Face Singing Example](https://github.com/exploid/songster/raw/master/images/me-sidebyside.gif)
 
 ### Two face example
+
 ![Two Face Singing Example](https://github.com/exploid/songster/raw/master/images/me-double-sidebyside.gif)
 
 ## Dependencies
