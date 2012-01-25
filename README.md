@@ -2,7 +2,7 @@
 
 Turn every face found in your images into singing faces. -- ALPHA --
 
-# Usage
+## Usage
 
 This is meant to be a ruby gem but is currently not bundled up due to the
 current status of the code (not totally stable yet).
@@ -11,7 +11,7 @@ To use it at the moment, you can have a look at the test.rb file. To run it on
 the test images I provided, you can run `ruby test.rb images/me.jpg` or
 `ruby test.rb images/me-double.jpg`
 
-# Examples
+## Examples
 
 ### Single face example
 ![Two Face Singing Example](https://github.com/exploid/songster/raw/master/images/me-sidebyside.gif)
@@ -19,7 +19,7 @@ the test images I provided, you can run `ruby test.rb images/me.jpg` or
 ### Two face example
 ![Two Face Singing Example](https://github.com/exploid/songster/raw/master/images/me-double-sidebyside.gif)
 
-# Dependencies
+## Dependencies
 
 ### face.com
 
@@ -41,7 +41,7 @@ You need the ImageMagick command line tools added to your PATH. See the
 ImageMagick website for installation instructions for your platform:
 http://imagemagick.org/
 
-# TODO
+## TODO
 
 As previously stated, this is in alpha and there are still a lot of improvements
 to be made and you should not expect that this works out of the box with all of
