@@ -5,7 +5,7 @@ GEM
     face (0.0.4)
       json (>= 1.4.6)
       rest-client (>= 1.6.1)
-    json (1.6.4)
+    json (2.3.1)
     mime-types (1.17.2)
     rest-client (1.6.7)
       mime-types (>= 1.16)
